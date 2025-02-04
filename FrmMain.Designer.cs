@@ -45,13 +45,15 @@
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
             textEditor = new ScintillaNET.Scintilla();
+            compilardorToolStripMenuItem = new ToolStripMenuItem();
+            menuCompilar = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, ayudaToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, compilardorToolStripMenuItem, ayudaToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(800, 24);
@@ -159,6 +161,20 @@
             textEditor.Size = new Size(800, 398);
             textEditor.TabIndex = 4;
             // 
+            // compilardorToolStripMenuItem
+            // 
+            compilardorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuCompilar });
+            compilardorToolStripMenuItem.Name = "compilardorToolStripMenuItem";
+            compilardorToolStripMenuItem.Size = new Size(82, 20);
+            compilardorToolStripMenuItem.Text = "Compilador";
+            // 
+            // menuCompilar
+            // 
+            menuCompilar.Name = "menuCompilar";
+            menuCompilar.Size = new Size(180, 22);
+            menuCompilar.Text = "Compilar";
+            menuCompilar.Click += menuCompilar_Click;
+            // 
             // FrmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -197,5 +213,7 @@
         private OpenFileDialog openFileDialog1;
         private SaveFileDialog saveFileDialog1;
         private ScintillaNET.Scintilla textEditor;
+        private ToolStripMenuItem compilardorToolStripMenuItem;
+        private ToolStripMenuItem menuCompilar;
     }
 }

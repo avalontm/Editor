@@ -1,5 +1,7 @@
+using Editor.Compilador;
 using ScintillaNET;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Editor
 {
@@ -41,6 +43,11 @@ namespace Editor
         private void menuSalir_Click(object sender, EventArgs e)
         {
             Salir();
+        }
+
+        private void menuCompilar_Click(object sender, EventArgs e)
+        {
+            Compilar();
         }
 
         private void menuAbout_Click(object sender, EventArgs e)
@@ -123,7 +130,7 @@ namespace Editor
 
             Titulo();
 
-           textEditor.Text = File.ReadAllText(archivo);
+            textEditor.Text = File.ReadAllText(archivo);
         }
 
 
@@ -224,5 +231,17 @@ namespace Editor
             modificado = true;
             Titulo();
         }
+
+        private void Compilar()
+        {
+            Compilador.Lexer lexer = new Compilador.Lexer(textEditor.Text);
+            List<Token> tokens = lexer.AnalizarTokens();
+
+            foreach (var token in tokens)
+            {
+                Debug.WriteLine(token);
+            }
+        }
+
     }
 }
