@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Editor.Compilador
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
-    public class Lexer
+    public class AnalizadorLexico
     {
         private string _codigo;
         private int _posicion;
@@ -23,7 +15,7 @@ namespace Editor.Compilador
         private static readonly HashSet<char> Operadores = new() { '+', '-', '*', '/', '=', '<', '>', '!' };
         private static readonly HashSet<char> Separadores = new() { '(', ')', '{', '}', '[', ']', ';', ',' };
 
-        public Lexer(string codigo)
+        public AnalizadorLexico(string codigo)
         {
             _codigo = codigo;
             _posicion = 0;
@@ -31,6 +23,8 @@ namespace Editor.Compilador
 
         private char VerSiguiente() => _posicion < _codigo.Length ? _codigo[_posicion] : '\0';
         private char Avanzar() => _codigo[_posicion++];
+
+        #region Analizador
 
         public List<Token> AnalizarTokens()
         {
@@ -45,7 +39,7 @@ namespace Editor.Compilador
                     Avanzar();
                     continue;
                 }
-
+                
                 if (actual == '#')  // Directivas de preprocesador (Ej: #include)
                 {
                     string directiva = LeerMientras(ch => !char.IsWhiteSpace(ch));
@@ -125,6 +119,7 @@ namespace Editor.Compilador
             tokens.Add(new Token(TipoToken.FinArchivo, ""));
             return tokens;
         }
+        #endregion
 
         private string LeerMientras(Func<char, bool> condicion)
         {
@@ -135,7 +130,7 @@ namespace Editor.Compilador
             }
             return resultado.ToString();
         }
-
+      
         private char VerSiguienteSiguiente() => _posicion + 1 < _codigo.Length ? _codigo[_posicion + 1] : '\0';
     }
 }

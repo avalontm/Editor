@@ -37,6 +37,8 @@
             menuGuardarComo = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             menuSalir = new ToolStripMenuItem();
+            compilardorToolStripMenuItem = new ToolStripMenuItem();
+            menuCompilar = new ToolStripMenuItem();
             ayudaToolStripMenuItem = new ToolStripMenuItem();
             menuAbout = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
@@ -45,8 +47,7 @@
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
             textEditor = new ScintillaNET.Scintilla();
-            compilardorToolStripMenuItem = new ToolStripMenuItem();
-            menuCompilar = new ToolStripMenuItem();
+            textDebug = new RichTextBox();
             menuStrip1.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -107,6 +108,20 @@
             menuSalir.Text = "Salir";
             menuSalir.Click += menuSalir_Click;
             // 
+            // compilardorToolStripMenuItem
+            // 
+            compilardorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuCompilar });
+            compilardorToolStripMenuItem.Name = "compilardorToolStripMenuItem";
+            compilardorToolStripMenuItem.Size = new Size(82, 20);
+            compilardorToolStripMenuItem.Text = "Compilador";
+            // 
+            // menuCompilar
+            // 
+            menuCompilar.Name = "menuCompilar";
+            menuCompilar.Size = new Size(123, 22);
+            menuCompilar.Text = "Compilar";
+            menuCompilar.Click += menuCompilar_Click;
+            // 
             // ayudaToolStripMenuItem
             // 
             ayudaToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuAbout });
@@ -161,25 +176,22 @@
             textEditor.Size = new Size(800, 398);
             textEditor.TabIndex = 4;
             // 
-            // compilardorToolStripMenuItem
+            // textDebug
             // 
-            compilardorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuCompilar });
-            compilardorToolStripMenuItem.Name = "compilardorToolStripMenuItem";
-            compilardorToolStripMenuItem.Size = new Size(82, 20);
-            compilardorToolStripMenuItem.Text = "Compilador";
-            // 
-            // menuCompilar
-            // 
-            menuCompilar.Name = "menuCompilar";
-            menuCompilar.Size = new Size(180, 22);
-            menuCompilar.Text = "Compilar";
-            menuCompilar.Click += menuCompilar_Click;
+            textDebug.Dock = DockStyle.Bottom;
+            textDebug.Location = new Point(0, 332);
+            textDebug.Name = "textDebug";
+            textDebug.ReadOnly = true;
+            textDebug.Size = new Size(800, 96);
+            textDebug.TabIndex = 6;
+            textDebug.Text = "";
             // 
             // FrmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(textDebug);
             Controls.Add(textEditor);
             Controls.Add(statusStrip1);
             Controls.Add(menuStrip1);
@@ -187,7 +199,7 @@
             MainMenuStrip = menuStrip1;
             Name = "FrmMain";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Sin titulo: Block de notas";
+            Text = "Sin titulo: Editor";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             statusStrip1.ResumeLayout(false);
@@ -215,5 +227,6 @@
         private ScintillaNET.Scintilla textEditor;
         private ToolStripMenuItem compilardorToolStripMenuItem;
         private ToolStripMenuItem menuCompilar;
+        private RichTextBox textDebug;
     }
 }

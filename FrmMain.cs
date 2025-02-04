@@ -19,6 +19,7 @@ namespace Editor
         }
 
         //Menus
+        #region Menus
 
         private void menuNuevo_Click(object sender, EventArgs e)
         {
@@ -55,6 +56,8 @@ namespace Editor
             MessageBox.Show("Esta practica estas realizado por:\nJaime Raul Mendez Lopez\nIng. Sistemas Computacionales (5SS)", "Acerca del editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        #endregion
+
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -78,7 +81,7 @@ namespace Editor
         }
 
         //Funciones
-
+        #region Funciones
         void Titulo()
         {
             string prefix = string.Empty;
@@ -94,11 +97,11 @@ namespace Editor
 
             if (string.IsNullOrEmpty(archivo))
             {
-                this.Text = $"{prefix}Sin titulo : Block de notas";
+                this.Text = $"{prefix}Sin titulo : Editor";
             }
             else
             {
-                this.Text = $"{prefix}{archivo} : Bloack de notas";
+                this.Text = $"{prefix}{archivo} : Editor";
             }
         }
 
@@ -208,6 +211,12 @@ namespace Editor
             Application.Exit();
         }
 
+        private void textEditor_TextChanged(object sender, EventArgs e)
+        {
+            modificado = true;
+            Titulo();
+        }
+
         void GuadarArchivo()
         {
             try
@@ -226,22 +235,17 @@ namespace Editor
             }
         }
 
-        private void textEditor_TextChanged(object sender, EventArgs e)
-        {
-            modificado = true;
-            Titulo();
-        }
-
         private void Compilar()
         {
-            Compilador.Lexer lexer = new Compilador.Lexer(textEditor.Text);
+            AnalizadorLexico lexer = new AnalizadorLexico(textEditor.Text);
             List<Token> tokens = lexer.AnalizarTokens();
 
             foreach (var token in tokens)
             {
-                Debug.WriteLine(token);
+                textDebug.Text += $"{token}\n";
             }
         }
+        #endregion
 
     }
 }
