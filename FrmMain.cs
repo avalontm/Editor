@@ -53,7 +53,7 @@ namespace Editor
 
         private void menuAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Esta practica estas realizado por:\nJaime Raul Mendez Lopez\nIng. Sistemas Computacionales (5SS)", "Acerca del editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Esta practica esta realizado por:\nJaime Raul Mendez Lopez\nIng. Sistemas Computacionales (5SS)", "Acerca del editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion
@@ -107,9 +107,10 @@ namespace Editor
 
         void Nuevo()
         {
+            archivo = string.Empty; 
             //Código para crear un nuevo archivo
             Titulo();
-
+            
             //Limpiar el contenido del editor
             textEditor.Clear();
         }
