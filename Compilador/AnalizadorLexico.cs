@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 
 namespace Editor.Compilador
 {
@@ -11,14 +10,14 @@ namespace Editor.Compilador
         private int _columna;
 
         private static readonly HashSet<string> PalabrasClave = new()
-        {
-            "int", "return", "if", "else", "while", "for", "void", "char", "float", "double", "struct"
-        };
+            {
+                "int", "return", "if", "else", "while", "for", "void", "char", "float", "double", "struct"
+            };
 
         private static readonly HashSet<char> Operadores = new() { '+', '-', '*', '/', '=', '<', '>', '!' };
         private static readonly HashSet<char> Separadores = new() { '(', ')', '{', '}', '[', ']', ';', ',' };
 
-        public Action<int>? ErrorReturn { get;  set; }
+        public Action<int>? ErrorReturn { get; set; }
 
         public AnalizadorLexico(string codigo)
         {
@@ -107,7 +106,7 @@ namespace Editor.Compilador
                                 // Verificamos que se cierre correctamente con '>' o '"'
                                 if (VerSiguiente() == '>' || VerSiguiente() == '"')
                                 {
-                                    char _delimitador2 =  Avanzar(); // Omitimos '>' o '"'
+                                    char _delimitador2 = Avanzar(); // Omitimos '>' o '"'
                                     tokens.Add(new Token(TipoToken.Preprocesador, $"#include {_delimitador1}{contenido}{_delimitador2}"));
                                 }
                                 else
@@ -194,7 +193,6 @@ namespace Editor.Compilador
                         continue;
                     }
 
-
                     if (char.IsDigit(actual) || actual == '.')  // Números y decimales
                     {
                         string numero = LeerMientras(ch => char.IsDigit(ch) || ch == '.');
@@ -232,14 +230,24 @@ namespace Editor.Compilador
                         continue;
                     }
 
-                    // Si no es ninguno de los anteriores, verifica si se esperaba un punto y coma
-                    if (actual == '\n' || actual == '\r') // Fin de una línea o salto de línea
+                    if (actual == '\n' || actual == '\r') // Fin de línea o salto de línea
                     {
-                        // Verificar si la línea anterior terminó con un punto y coma
-                        if (_codigo[_posicion - 1] != ';')
+                        // Verificar si la línea anterior terminó con un punto y coma, solo si es una declaración
+                        if (tokens.Count > 0)
                         {
-                            tokens.Add(new Token(TipoToken.Error, $"Error: punto y coma faltante en línea {_linea}, carácter {_columna}"));
-                            break;
+                            var ultimoToken = tokens.Last();
+                            if (ultimoToken.Type == TipoToken.Identificador ||
+                                ultimoToken.Type == TipoToken.Numero ||
+                                ultimoToken.Type == TipoToken.LlamadaFuncion ||
+                                ultimoToken.Type == TipoToken.Operador)
+                            {
+                                if (tokens.Count > 1 && tokens[tokens.Count - 2].Value != ";")
+                                {
+                                    tokens.Add(new Token(TipoToken.Error, $"Error: punto y coma faltante en línea {_linea}, carácter {_columna}"));
+                                    ErrorReturn?.Invoke(_linea);
+                                    break;
+                                }
+                            }
                         }
                     }
 
@@ -251,12 +259,11 @@ namespace Editor.Compilador
             }
             catch (Exception ex)
             {
-                tokens.Add(new Token(TipoToken.Desconocido, $"Error: {ex.Message} en línea {_linea}, carácter {_columna}"));
+                tokens.Add(new Token(TipoToken.Error, $"Error: {ex.Message} en línea {_linea}, carácter {_columna}"));
                 ErrorReturn?.Invoke(_linea);
             }
 
             return tokens;
         }
-
     }
 }
