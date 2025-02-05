@@ -63,6 +63,10 @@ namespace Editor
             textEditor.Styles[Style.Default].ForeColor = IntToColor(COLOR_TEXTO);
             textEditor.StyleClearAll();
 
+            // Configurar un marcador rojo para errores
+            textEditor.Markers[0].SetBackColor(System.Drawing.Color.Red);
+            textEditor.Markers[0].Symbol = ScintillaNET.MarkerSymbol.FullRect; // Rectángulo completo
+
             // Configuración del lenguaje C++ en el editor
             textEditor.Lexer = ScintillaNET.Lexer.Cpp;
 
@@ -171,5 +175,29 @@ namespace Editor
 
             textEditor.AutomaticFold = (AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change);
         }
+
+        // Método para marcar la línea de error
+        public static void MarcarErrorEnLinea(int linea)
+        {
+            // Asegurarse de que el número de la línea está dentro del rango
+            if (linea >= 0 && linea < textEditor.Lines.Count)
+            {
+                // Agregar el marcador en la línea correspondiente
+                textEditor.Lines[linea-1].MarkerAdd(0);  // 0 es el índice del marcador
+            }
+        }
+
+        public static void EliminarMarcadorDeLinea(int linea)
+        {
+            if (linea >= 0 && linea < textEditor.Lines.Count)
+            {
+                textEditor.Lines[linea-1].MarkerDelete(0);  // 0 es el índice del marcador
+            }
+        }
+        public static void LimpiarTodasLasMarcas()
+        {
+            textEditor.MarkerDeleteAll(0); // 0 es el índice del marcador configurado
+        }
+
     }
 }

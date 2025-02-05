@@ -237,15 +237,29 @@ namespace Editor
 
         private void Compilar()
         {
+            EditorHelper.LimpiarTodasLasMarcas();
+
             AnalizadorLexico lexer = new AnalizadorLexico(textEditor.Text);
+            lexer.ErrorReturn += OnErrorReturn;
             List<Token> tokens = lexer.AnalizarTokens();
+
+            //vaciamos el contenedor del Debug
+            textDebug.Text = string.Empty;
 
             foreach (var token in tokens)
             {
                 textDebug.Text += $"{token}\n";
             }
         }
+
+        private void OnErrorReturn(int linea)
+        {
+           EditorHelper.MarcarErrorEnLinea(linea);
+            Debug.WriteLine($"MarcarErrorEnLinea: {linea}");
+        }
+
         #endregion
 
     }
 }
+ 
