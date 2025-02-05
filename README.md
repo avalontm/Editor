@@ -10,4 +10,5 @@
 | Leer archivo | ✅  |
 | Guarda archivo  | ✅  |
 | analiza codigo  | ✅  |
-| gnera codigo  | 𐄂  |
+| mostrar linea de error  | ✅  |
+| genera codigo  | 𐄂  |
