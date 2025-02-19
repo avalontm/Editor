@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 namespace Editor.Compilador
 {
@@ -9,15 +11,17 @@ namespace Editor.Compilador
         private int _linea;
         private int _columna;
 
-        private static readonly HashSet<string> PalabrasClave = new()
-            {
-                "int", "return", "if", "else", "while", "for", "void", "char", "float", "double", "struct"
-            };
+        private static readonly Dictionary<string, string> PalabrasClave = new()
+    {
+        {"int", "entero"}, {"return", "retornar"}, {"if", "si"}, {"else", "sino"}, {"while", "mientras"}, {"for", "para"}, { "string", "cadena"},
+        {"void", "vacio"}, {"char", "caracter"}, {"float", "flotante"}, {"double", "doble"}, {"struct", "estructura"}, {"include", "incluir"}, {"define", "definir"}
+    };
 
         private static readonly HashSet<char> Operadores = new() { '+', '-', '*', '/', '=', '<', '>', '!' };
         private static readonly HashSet<char> Separadores = new() { '(', ')', '{', '}', '[', ']', ';', ',' };
 
         public Action<int>? ErrorReturn { get; set; }
+        List<Token> tokens { get; set; }
 
         public AnalizadorLexico(string codigo)
         {
@@ -28,6 +32,7 @@ namespace Editor.Compilador
         }
 
         private char VerSiguiente() => _posicion < _codigo.Length ? _codigo[_posicion] : '\0';
+        private char VerSiguienteSiguiente() => _posicion + 1 < _codigo.Length ? _codigo[_posicion + 1] : '\0';
         private char Avanzar()
         {
             char actual = _codigo[_posicion++];
@@ -36,6 +41,7 @@ namespace Editor.Compilador
                 _posicion++; // Omitir '\n' después de '\r'
                 _linea++;
                 _columna = 1;
+                tokens.Add(new Token(TipoToken.SaltoLinea, "\n"));
             }
             else if (actual == '\n')
             {
@@ -49,8 +55,6 @@ namespace Editor.Compilador
             return actual;
         }
 
-        private char VerSiguienteSiguiente() => _posicion + 1 < _codigo.Length ? _codigo[_posicion + 1] : '\0';
-
         private string LeerMientras(Func<char, bool> condicion)
         {
             StringBuilder resultado = new();
@@ -63,7 +67,7 @@ namespace Editor.Compilador
 
         public List<Token> AnalizarTokens()
         {
-            List<Token> tokens = new();
+            tokens = new();
 
             try
             {
@@ -136,7 +140,7 @@ namespace Editor.Compilador
                     {
                         string palabra = LeerMientras(char.IsLetterOrDigit);
 
-                        if (PalabrasClave.Contains(palabra))
+                        if (PalabrasClave.ContainsKey(palabra))
                         {
                             tokens.Add(new Token(TipoToken.PalabraClave, palabra));
                         }
@@ -265,5 +269,40 @@ namespace Editor.Compilador
 
             return tokens;
         }
+
+        public string TraducirCodigo(List<Token> tokens)
+        {
+            StringBuilder codigoTraducido = new();
+
+            foreach (var token in tokens)
+            {
+                if (token.Type == TipoToken.PalabraClave)
+                {
+                    codigoTraducido.Append(PalabrasClave[token.Value] + " ");
+                }
+                else
+                {
+                    switch (token.Type)
+                    {
+                        case TipoToken.CadenaTexto:
+                            codigoTraducido.Append($@"""{token.Value}""");
+                            break;
+                        case TipoToken.Numero:
+                            codigoTraducido.Append(token.Value);
+                            break;
+                        case TipoToken.Comentario:
+                            break;
+                        default:
+                            codigoTraducido.Append(token.Value);
+                            break;
+                    }
+                }
+            }
+
+            return codigoTraducido.ToString();
+        }
+
     }
+
+
 }

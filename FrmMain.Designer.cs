@@ -112,8 +112,8 @@
             // 
             compilardorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuCompilar });
             compilardorToolStripMenuItem.Name = "compilardorToolStripMenuItem";
-            compilardorToolStripMenuItem.Size = new Size(82, 20);
-            compilardorToolStripMenuItem.Text = "Compilador";
+            compilardorToolStripMenuItem.Size = new Size(66, 20);
+            compilardorToolStripMenuItem.Text = "Proyecto";
             // 
             // menuCompilar
             // 
@@ -175,6 +175,7 @@
             textEditor.Name = "textEditor";
             textEditor.Size = new Size(800, 398);
             textEditor.TabIndex = 4;
+            textEditor.TextChanged += textEditor_TextChanged;
             // 
             // textDebug
             // 

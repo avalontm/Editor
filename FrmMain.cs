@@ -107,10 +107,10 @@ namespace Editor
 
         void Nuevo()
         {
-            archivo = string.Empty; 
+            archivo = string.Empty;
             //Código para crear un nuevo archivo
             Titulo();
-            
+
             //Limpiar el contenido del editor
             textEditor.Clear();
         }
@@ -249,18 +249,32 @@ namespace Editor
 
             foreach (var token in tokens)
             {
-                textDebug.Text += $"{token}\n";
+                if (token.Type != TipoToken.SaltoLinea)
+                {
+                    textDebug.Text += $"{token}\n";
+                }
+            }
+
+            string codigo_traducido = lexer.TraducirCodigo(tokens);
+
+            try
+            {
+
+                File.WriteAllText($"{archivo}.trad", codigo_traducido);
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
         private void OnErrorReturn(int linea)
         {
-           EditorHelper.MarcarErrorEnLinea(linea);
+            EditorHelper.MarcarErrorEnLinea(linea);
             Debug.WriteLine($"MarcarErrorEnLinea: {linea}");
         }
 
-        #endregion
-
+#endregion
     }
 }
  

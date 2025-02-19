@@ -12,9 +12,10 @@
         DirectivaPreprocesador,  // Directivas del preprocesador (#include, #define, #ifdef, #endif, etc.)
         ArchivoIncluido,         // Archivo especificado en #include ("archivo.h" o <archivo.h>)
         Preprocesador,           // Representa elementos relacionados con el preprocesador en general
-        LlamadaFuncion,           // Identifica llamadas a funciones dentro del código
+        LlamadaFuncion,          // Identifica llamadas a funciones dentro del código
         Desconocido,             // Caracteres no reconocidos o inválidos
         FinArchivo,              // Indica el final del código fuente
-        Error
+        Error,                   // Error de sintaxis
+        SaltoLinea               // Salto de linea (utilizada para la traduccion)
     }
 }
