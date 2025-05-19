@@ -1,5 +1,3 @@
-using Editor.Compilador;
-using ScintillaNET;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
@@ -60,7 +58,7 @@ namespace Editor
 
         private void menuAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Esta practica esta realizado por:\nJaime Raul Mendez Lopez\nIng. Sistemas Computacionales (5SS)", "Acerca del editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Esta practica esta realizado por:\nJaime Raul Mendez Lopez\nScarleth Yoceleth Arroyo Dominguez\n\nIng. Sistemas Computacionales (5SS)", "Acerca del editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion
@@ -119,7 +117,7 @@ namespace Editor
             Titulo();
 
             //Limpiar el contenido del editor
-            textEditor.Clear();
+            textEditor.Text = string.Empty;
         }
 
         void Abrir()
@@ -246,7 +244,7 @@ namespace Editor
         private async Task CompilarAsync(string commandline = "")
         {
             EditorHelper.LimpiarTodasLasMarcas();
-            textDebug.Clear();
+            textDebug.Text = string.Empty;
 
             try
             {
@@ -312,4 +310,3 @@ namespace Editor
         #endregion
     }
 }
- 
