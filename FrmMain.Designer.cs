@@ -48,6 +48,7 @@
             saveFileDialog1 = new SaveFileDialog();
             textEditor = new ScintillaNET.Scintilla();
             textDebug = new RichTextBox();
+            compilarTraducirToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -110,7 +111,7 @@
             // 
             // compilardorToolStripMenuItem
             // 
-            compilardorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuCompilar });
+            compilardorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuCompilar, compilarTraducirToolStripMenuItem });
             compilardorToolStripMenuItem.Name = "compilardorToolStripMenuItem";
             compilardorToolStripMenuItem.Size = new Size(66, 20);
             compilardorToolStripMenuItem.Text = "Proyecto";
@@ -118,7 +119,7 @@
             // menuCompilar
             // 
             menuCompilar.Name = "menuCompilar";
-            menuCompilar.Size = new Size(123, 22);
+            menuCompilar.Size = new Size(180, 22);
             menuCompilar.Text = "Compilar";
             menuCompilar.Click += menuCompilar_Click;
             // 
@@ -173,19 +174,30 @@
             textEditor.AutoCMaxHeight = 9;
             textEditor.Location = new Point(0, 27);
             textEditor.Name = "textEditor";
-            textEditor.Size = new Size(800, 398);
+            textEditor.Size = new Size(800, 299);
             textEditor.TabIndex = 4;
             textEditor.TextChanged += textEditor_TextChanged;
             // 
             // textDebug
             // 
+            textDebug.BackColor = SystemColors.Control;
             textDebug.Dock = DockStyle.Bottom;
+            textDebug.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            textDebug.ForeColor = Color.Black;
             textDebug.Location = new Point(0, 332);
             textDebug.Name = "textDebug";
             textDebug.ReadOnly = true;
+            textDebug.ScrollBars = RichTextBoxScrollBars.ForcedBoth;
             textDebug.Size = new Size(800, 96);
             textDebug.TabIndex = 6;
             textDebug.Text = "";
+            // 
+            // compilarTraducirToolStripMenuItem
+            // 
+            compilarTraducirToolStripMenuItem.Name = "compilarTraducirToolStripMenuItem";
+            compilarTraducirToolStripMenuItem.Size = new Size(180, 22);
+            compilarTraducirToolStripMenuItem.Text = "Compilar + Traducir";
+            compilarTraducirToolStripMenuItem.Click += compilarTraducirToolStripMenuItem_Click;
             // 
             // FrmMain
             // 
@@ -229,5 +241,6 @@
         private ToolStripMenuItem compilardorToolStripMenuItem;
         private ToolStripMenuItem menuCompilar;
         private RichTextBox textDebug;
+        private ToolStripMenuItem compilarTraducirToolStripMenuItem;
     }
 }

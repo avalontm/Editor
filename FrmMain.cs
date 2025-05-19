@@ -2,6 +2,7 @@ using Editor.Compilador;
 using ScintillaNET;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 
 namespace Editor
 {
@@ -14,6 +15,7 @@ namespace Editor
         public FrmMain()
         {
             InitializeComponent();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             EditorHelper.Iniciar(textEditor);
             Nuevo();
         }
@@ -46,9 +48,14 @@ namespace Editor
             Salir();
         }
 
-        private void menuCompilar_Click(object sender, EventArgs e)
+        private async void menuCompilar_Click(object sender, EventArgs e)
         {
-            Compilar();
+            await CompilarAsync();
+        }
+
+        private async void compilarTraducirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await CompilarAsync("--translate");
         }
 
         private void menuAbout_Click(object sender, EventArgs e)
@@ -236,37 +243,65 @@ namespace Editor
             }
         }
 
-        private void Compilar()
+        private async Task CompilarAsync(string commandline = "")
         {
             EditorHelper.LimpiarTodasLasMarcas();
-
-            AnalizadorLexico lexer = new AnalizadorLexico(textEditor.Text);
-            lexer.ErrorReturn += OnErrorReturn;
-            List<Token> tokens = lexer.AnalizarTokens();
-
-            //vaciamos el contenedor del Debug
-            textDebug.Text = string.Empty;
-
-            foreach (var token in tokens)
-            {
-                if (token.Type != TipoToken.SaltoLinea)
-                {
-                    textDebug.Text += $"{token}\n";
-                }
-            }
-
-            string codigo_traducido = lexer.TraducirCodigo(tokens);
+            textDebug.Clear();
 
             try
             {
+                string directorioActual = AppDomain.CurrentDomain.BaseDirectory;
+                string rutaExe = Path.Combine(directorioActual, "SimpleC.exe");
 
-                File.WriteAllText($"{archivo}.trad", codigo_traducido);
+                var proceso = new Process();
+                proceso.StartInfo.FileName = rutaExe;
+                proceso.StartInfo.Arguments = $"\"{archivo}\" --external {commandline}";
+
+                proceso.StartInfo.RedirectStandardOutput = true;
+                proceso.StartInfo.RedirectStandardError = true;
+                proceso.StartInfo.StandardOutputEncoding = Encoding.GetEncoding(850);
+                proceso.StartInfo.StandardErrorEncoding = Encoding.GetEncoding(850);
+                proceso.StartInfo.UseShellExecute = false;
+                proceso.StartInfo.CreateNoWindow = true;
+
+                proceso.OutputDataReceived += (sender, e) =>
+                {
+                    if (!string.IsNullOrEmpty(e.Data))
+                    {
+                        this.Invoke(() =>
+                        {
+                            // Inserta texto coloreado (sin prefijos)
+                            textDebug.AppendText(e.Data + "\n");
+                            Debug.WriteLine($"{e.Data}");
+                        });
+                    }
+                };
+
+                proceso.ErrorDataReceived += (sender, e) =>
+                {
+                    if (!string.IsNullOrEmpty(e.Data))
+                    {
+                        this.Invoke(() =>
+                        {
+                            textDebug.AppendText(e.Data + "\n");
+
+                        });
+                    }
+                };
+
+                proceso.Start();
+
+                proceso.BeginOutputReadLine();
+                proceso.BeginErrorReadLine();
+
+                await proceso.WaitForExitAsync();
             }
             catch (Exception ex)
             {
-
+                textDebug.AppendText(ex.Message);
             }
         }
+
 
         private void OnErrorReturn(int linea)
         {
@@ -274,7 +309,7 @@ namespace Editor
             Debug.WriteLine($"MarcarErrorEnLinea: {linea}");
         }
 
-#endregion
+        #endregion
     }
 }
  
